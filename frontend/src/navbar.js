@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
     Button,
@@ -19,9 +20,14 @@ import { faSearch, faMapMarker } from '@fortawesome/free-solid-svg-icons'
 import logo from '../src/assets/brasil_accessivel_logo.png';
 
 export default function Header() {
-
-    function handleSearchButtonClick() {
-        console.log("Fazendo a busca...");
+    const [search, setSearch] = useState('');
+    const [adress, setAdress] = useState('');
+    
+    function handleSearchButtonClick(e) {
+        const data = {
+            search, adress
+        };
+        console.log("Fazendo a busca com os dados: ", data);
     }
 
     return (
@@ -46,8 +52,8 @@ export default function Header() {
                     </Nav>
                     &nbsp;&nbsp;
                     <Form className="d-flex" >
-                        <Input type="search" bsSize="sm" placeholder="Local/Serviço" />&nbsp;
-                        <Input type="text" bsSize="sm" placeholder="Endereço" name="address" id="search-terms" />
+                        <Input type="search" bsSize="sm" placeholder="Local/Serviço" value={search} onChange={e => setSearch(e.target.value)} />&nbsp;
+                        <Input type="text" bsSize="sm" placeholder="Endereço" value={adress} onChange={e => setAdress(e.target.value)} />
                         <Button color="success"  onClick={ () => handleSearchButtonClick() }><FontAwesomeIcon icon={faSearch} /></Button>
                     </Form>
                     &nbsp;&nbsp;
