@@ -25,13 +25,13 @@ const PlaceDetails = ({ place, selected, refProp }) => {
           <Typography component="legend">{place.num_reviews} review{place.num_reviews > 1 && 's'}</Typography>
         </Box>
         <Box display="flex" justifyContent="space-between">
-          <Typography component="legend">Price</Typography>
+          <Typography component="legend">Preço</Typography>
           <Typography gutterBottom variant="subtitle1">
             {place.price_level}
           </Typography>
         </Box>
         <Box display="flex" justifyContent="space-between">
-          <Typography component="legend">Ranking</Typography>
+          <Typography component="legend">Ranqueado como</Typography>
           <Typography gutterBottom variant="subtitle1">
             {place.ranking}
           </Typography>
