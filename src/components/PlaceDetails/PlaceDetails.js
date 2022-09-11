@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Typography, Button, Card, CardMedia, CardContent, CardActions, Chip } from '@material-ui/core';
+import { useState } from "react";
+import { Box, Typography, Button, Card, CardMedia, CardContent, CardActions, Chip, FormGroup, FormControlLabel, Checkbox } from '@material-ui/core';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import PhoneIcon from '@material-ui/icons/Phone';
 import Rating from '@material-ui/lab/Rating';
@@ -8,8 +9,29 @@ import Rating from '@material-ui/lab/Rating';
 import useStyles from './styles.js';
 
 const PlaceDetails = ({ place, selected, refProp }) => {
+  const [portasLargas, setPortasLargas] = useState(false);
+  const [banheiro, setBanheiro] = useState(false);
+  const [rampa, setRampa] = useState(false);
+  const [elevador, setElevador] = useState(false);
+  const [pisoTatil, setPisoTatil] = useState(false);
+  const [vagaEstacionamento, setVagaEstacionamento] = useState(false);
+
   if (selected) refProp?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   const classes = useStyles();
+
+  function reportAcessibility(placeId) {
+    const acessibility = {
+      "placeAcessibilityId": placeId,
+      "portasLargas": portasLargas,
+      "banheiro": banheiro,
+      "rampa": rampa,
+      "elevador": elevador,
+      "pisoTatil": pisoTatil,
+      "vagaEstacionamento": vagaEstacionamento
+    };
+
+    console.log('acessibility:', acessibility);
+  }
 
   return (
     <Card elevation={6}>
@@ -25,6 +47,18 @@ const PlaceDetails = ({ place, selected, refProp }) => {
           <Typography component="legend">{place.num_reviews} review{place.num_reviews > 1 && 's'}</Typography>
         </Box>
         <Box display="flex" justifyContent="space-between">
+          <FormGroup>
+            <Typography gutterBottom variant="h6">Reportar itens de acessibilidade</Typography>
+            <FormControlLabel control={<Checkbox onChange={e => setPortasLargas(e.target.checked)} />} label="Portas Largas" />
+            <FormControlLabel control={<Checkbox onChange={e => setElevador(e.target.checked)} />} label="Elevador" />
+            <FormControlLabel control={<Checkbox onChange={e => setRampa(e.target.checked)} />} label="Rampa" />
+            <FormControlLabel control={<Checkbox onChange={e => setBanheiro(e.target.checked)} />} label="Banheiro acessível" />
+            <FormControlLabel control={<Checkbox onChange={e => setPisoTatil(e.target.checked)} />} label="Piso Tátil" />
+            <FormControlLabel control={<Checkbox onChange={e => setVagaEstacionamento(e.target.checked)} />} label="Vaga estacionamento acessível " />
+            <Button variant="outlined" onClick={() => reportAcessibility(place.location_id)}>Reportar</Button>
+          </FormGroup>
+        </Box>
+        <Box display="flex" justifyContent="space-between">
           <Typography component="legend">Preço</Typography>
           <Typography gutterBottom variant="subtitle1">
             {place.price_level}
@@ -38,7 +72,7 @@ const PlaceDetails = ({ place, selected, refProp }) => {
         </Box>
         {place?.awards?.map((award) => (
           <Box display="flex" justifyContent="space-between" my={1} alignItems="center">
-            <img src={award.images.small} />
+            <img src={award.images.small} alt="Award" />
             <Typography variant="subtitle2" color="textSecondary">{award.display_name}</Typography>
           </Box>
         ))}

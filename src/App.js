@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CssBaseline, Grid } from '@material-ui/core';
 
-import { getPlacesData, getWeatherData } from './api/travelAdvisorAPI';
+import { getPlacesData } from './api/travelAdvisorAPI';
 import Header from './components/Header/Header';
 import List from './components/List/List';
 import Map from './components/Map/Map';
@@ -9,11 +9,11 @@ import Map from './components/Map/Map';
 const App = () => {
   const [type, setType] = useState('restaurants');
   const [rating, setRating] = useState('');
+  const [disability, setDisability] = useState('');
 
   const [coords, setCoords] = useState({});
   const [bounds, setBounds] = useState(null);
 
-  const [weatherData, setWeatherData] = useState([]);
   const [filteredPlaces, setFilteredPlaces] = useState([]);
   const [places, setPlaces] = useState([]);
 
@@ -31,14 +31,11 @@ const App = () => {
     const filtered = places.filter((place) => Number(place.rating) > rating);
 
     setFilteredPlaces(filtered);
-  }, [rating]);
+  }, [places, rating]);
 
   useEffect(() => {
     if (bounds) {
       setIsLoading(true);
-
-      getWeatherData(coords.lat, coords.lng)
-        .then((data) => setWeatherData(data));
 
       getPlacesData(type, bounds.sw, bounds.ne)
         .then((data) => {
@@ -73,6 +70,8 @@ const App = () => {
             setType={setType}
             rating={rating}
             setRating={setRating}
+            disability={disability}
+            setDisability={setDisability}
           />
         </Grid>
         <Grid item xs={12} md={8} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -82,7 +81,6 @@ const App = () => {
             setCoords={setCoords}
             coords={coords}
             places={filteredPlaces.length ? filteredPlaces : places}
-            weatherData={weatherData}
           />
         </Grid>
       </Grid>
