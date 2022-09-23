@@ -15,25 +15,16 @@ const List = ({ places, type, setType, rating, setRating, disability, setDisabil
   useEffect(() => {
     switch (disability) {
       case '1':
-      case '2':
-      case '11':
-      case '13':
+      case '4':
         setRating('2');  
         break;
-      case '3':
-      case '4':
+      case '2':
+      case '5':
         setRating('1');  
         break;
-      case '5':
+      case '3':
       case '6':
-      case '12':
         setRating('4.5');  
-        break;
-      case '7':
-      case '8':
-      case '9':
-      case '10':
-        setRating('3');  
         break;
       default:
         setRating('4');
@@ -72,19 +63,12 @@ const List = ({ places, type, setType, rating, setRating, disability, setDisabil
           <FormControl className={classes.formControl}>
             <InputLabel id="disability">Deficiência</InputLabel>
             <Select id="disability" value={disability} onChange={(e) => setDisability(e.target.value)}>
-              <MenuItem value="1">Paraplegia</MenuItem>
-              <MenuItem value="2">Paraparesia</MenuItem>
-              <MenuItem value="3">Monoplegia</MenuItem>
-              <MenuItem value="4">Monoparesia</MenuItem>
-              <MenuItem value="5">Tetraplegia</MenuItem>
-              <MenuItem value="6">Tetraparesia</MenuItem>
-              <MenuItem value="7">Triplegia</MenuItem>
-              <MenuItem value="8">Triparesia</MenuItem>
-              <MenuItem value="9">Hemiplegia</MenuItem>
-              <MenuItem value="10">Hemiparesia</MenuItem>
-              <MenuItem value="11">Amputação</MenuItem>
-              <MenuItem value="12">Paralisia Cerebral</MenuItem>
-              <MenuItem value="13">Ostomia</MenuItem>
+              <MenuItem value="1">Paralesia parcial ou total de membros superiores</MenuItem>
+              <MenuItem value="2">Paralesia parcial ou total de membros inferiores</MenuItem>
+              <MenuItem value="3">Paralesia parcial ou total de todos os membros</MenuItem>
+              <MenuItem value="4">Falta dos membros superiores</MenuItem>
+              <MenuItem value="5">Falta dos membros inferiores</MenuItem>
+              <MenuItem value="6">Falta de todos os membros</MenuItem>
             </Select>
           </FormControl>
           <Grid container spacing={3} className={classes.list}>
