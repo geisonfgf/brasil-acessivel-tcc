@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { CssBaseline, Grid } from '@material-ui/core';
 
-import { getPlacesData } from './api/travelAdvisorAPI';
+import { getAccessiblePlacesData } from './api/accessibilityCloudAPI';
 import Header from './components/Header/Header';
 import List from './components/List/List';
 import Map from './components/Map/Map';
 
 const App = () => {
-  const [type, setType] = useState('restaurants');
+  const [places, setPlaces] = useState([]);
+  const [type, setType] = useState('restaurant');
   const [rating, setRating] = useState('');
   const [disability, setDisability] = useState('');
 
@@ -15,7 +16,6 @@ const App = () => {
   const [bounds, setBounds] = useState(null);
 
   const [filteredPlaces, setFilteredPlaces] = useState([]);
-  const [places, setPlaces] = useState([]);
 
   const [autocomplete, setAutocomplete] = useState(null);
   const [childClicked, setChildClicked] = useState(null);
@@ -27,21 +27,33 @@ const App = () => {
     });
   }, []);
 
+
   useEffect(() => {
-    const filtered = places.filter((place) => Number(place.rating) > rating);
-
-    setFilteredPlaces(filtered);
-  }, [places, rating]);
-
+    setPlaces(filteredPlaces);
+    setFilteredPlaces(places.filter((place) => Number(place.rating) > rating));
+  }, [rating]);
   useEffect(() => {
     if (bounds) {
       setIsLoading(true);
 
-      getPlacesData(type, bounds.sw, bounds.ne)
+      getAccessiblePlacesData(coords.lat, coords.lng, type)
         .then((data) => {
-          setPlaces(data.filter((place) => place.name && place.num_reviews > 0));
+          let ap = data.filter((place) => place.properties.name).map((item) => {
+            return {
+              "name": item.properties.name.en,
+              "latitude": `"${item.geometry.coordinates[0]}"`,
+              "longitude": `"${item.geometry.coordinates[1]}"`,
+              "rating": (Math.random() * 5).toFixed(2).toString(),
+              "category": {"name": item.properties.category},
+              "accessibility": item.properties.accessibility,
+              "distance": `"${item.properties.distance}"`,
+              "phone": item.properties.phoneNumber
+            };
+          });
           setFilteredPlaces([]);
           setRating('');
+          console.log('Accessible Places:', ap);
+          setFilteredPlaces(ap);
           setIsLoading(false);
         });
     }
@@ -65,7 +77,7 @@ const App = () => {
           <List
             isLoading={isLoading}
             childClicked={childClicked}
-            places={filteredPlaces.length ? filteredPlaces : places}
+            places={filteredPlaces}
             type={type}
             setType={setType}
             rating={rating}
@@ -80,7 +92,7 @@ const App = () => {
             setBounds={setBounds}
             setCoords={setCoords}
             coords={coords}
-            places={filteredPlaces.length ? filteredPlaces : places}
+            places={filteredPlaces}
           />
         </Grid>
       </Grid>

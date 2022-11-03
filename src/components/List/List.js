@@ -20,7 +20,7 @@ const List = ({ places, type, setType, rating, setRating, disability, setDisabil
         break;
       case '2':
       case '5':
-        setRating('1');  
+        setRating('3');  
         break;
       case '3':
       case '6':
@@ -42,11 +42,22 @@ const List = ({ places, type, setType, rating, setRating, disability, setDisabil
       ) : (
         <>
           <FormControl className={classes.formControl}>
+            <InputLabel id="disability">Deficiência</InputLabel>
+            <Select id="disability" value={disability} onChange={(e) => setDisability(e.target.value)}>
+              <MenuItem value="1">Paralesia parcial ou total de membros superiores</MenuItem>
+              <MenuItem value="2">Paralesia parcial ou total de membros inferiores</MenuItem>
+              <MenuItem value="3">Paralesia parcial ou total de todos os membros</MenuItem>
+              <MenuItem value="4">Falta dos membros superiores</MenuItem>
+              <MenuItem value="5">Falta dos membros inferiores</MenuItem>
+              <MenuItem value="6">Falta de todos os membros</MenuItem>
+            </Select>
+          </FormControl>
+          <br />
+          <FormControl className={classes.formControl}>
             <InputLabel id="type">Tipo</InputLabel>
             <Select id="type" value={type} onChange={(e) => setType(e.target.value)}>
-              <MenuItem value="restaurants">Restaurantes</MenuItem>
-              <MenuItem value="hotels">Hotéis</MenuItem>
-              <MenuItem value="attractions">Atrações</MenuItem>
+              <MenuItem value="restaurant">Restaurantes</MenuItem>
+              <MenuItem value="hotel">Hotéis</MenuItem>
             </Select>
           </FormControl>
           <FormControl className={classes.formControl}>
@@ -58,17 +69,6 @@ const List = ({ places, type, setType, rating, setRating, disability, setDisabil
               <MenuItem value="3">Acima de 3.0</MenuItem>
               <MenuItem value="4">Acima de 4.0</MenuItem>
               <MenuItem value="4.5">Acima de 4.5</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl className={classes.formControl}>
-            <InputLabel id="disability">Deficiência</InputLabel>
-            <Select id="disability" value={disability} onChange={(e) => setDisability(e.target.value)}>
-              <MenuItem value="1">Paralesia parcial ou total de membros superiores</MenuItem>
-              <MenuItem value="2">Paralesia parcial ou total de membros inferiores</MenuItem>
-              <MenuItem value="3">Paralesia parcial ou total de todos os membros</MenuItem>
-              <MenuItem value="4">Falta dos membros superiores</MenuItem>
-              <MenuItem value="5">Falta dos membros inferiores</MenuItem>
-              <MenuItem value="6">Falta de todos os membros</MenuItem>
             </Select>
           </FormControl>
           <Grid container spacing={3} className={classes.list}>
