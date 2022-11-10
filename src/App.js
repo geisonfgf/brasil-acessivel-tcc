@@ -8,8 +8,9 @@ import Map from './components/Map/Map';
 
 const App = () => {
   const [places, setPlaces] = useState([]);
-  const [type, setType] = useState('restaurant');
-  const [rating, setRating] = useState('');
+  const [type, setType] = useState('');
+  const [rating, setRating] = useState();
+  const [assistant, setAssistant] = useState();
   const [disability, setDisability] = useState('');
 
   const [coords, setCoords] = useState({});
@@ -29,9 +30,17 @@ const App = () => {
 
 
   useEffect(() => {
-    setPlaces(filteredPlaces);
-    setFilteredPlaces(places.filter((place) => Number(place.rating) > rating));
+    setFilteredPlaces(places.filter((place) => place.rating > rating));
   }, [rating]);
+
+  useEffect(() => {
+    if(assistant){
+      setFilteredPlaces(places.filter((place) => place.rating > 4.5 && place.distance < 2500.00));
+    } else {
+      setFilteredPlaces(places);
+    }
+  }, [assistant]);
+
   useEffect(() => {
     if (bounds) {
       setIsLoading(true);
@@ -39,20 +48,23 @@ const App = () => {
       getAccessiblePlacesData(coords.lat, coords.lng, type)
         .then((data) => {
           let ap = data.filter((place) => place.properties.name).map((item) => {
+            const rating = (item.properties.accessibility?.accessibleWith?.wheelchair) ? 5.0 : (Math.random() * 4).toFixed(2) 
             return {
+              "id": item.properties._id,
               "name": item.properties.name.en,
-              "latitude": `"${item.geometry.coordinates[0]}"`,
-              "longitude": `"${item.geometry.coordinates[1]}"`,
-              "rating": (Math.random() * 5).toFixed(2).toString(),
+              "latitude": item.geometry.coordinates[1],
+              "longitude": item.geometry.coordinates[0],
+              "rating": Number(rating),
               "category": {"name": item.properties.category},
               "accessibility": item.properties.accessibility,
-              "distance": `"${item.properties.distance}"`,
+              "description": item.properties.description,
+              "placeWebSiteURL": item.properties.placeWebsiteUrl,
+              "distance": item.properties.distance,
               "phone": item.properties.phoneNumber
             };
           });
-          setFilteredPlaces([]);
-          setRating('');
           console.log('Accessible Places:', ap);
+          setPlaces(ap);
           setFilteredPlaces(ap);
           setIsLoading(false);
         });
@@ -81,6 +93,7 @@ const App = () => {
             type={type}
             setType={setType}
             rating={rating}
+            setAssistant={setAssistant}
             setRating={setRating}
             disability={disability}
             setDisability={setDisability}

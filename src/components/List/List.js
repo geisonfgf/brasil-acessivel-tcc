@@ -1,11 +1,12 @@
 import React, { useState, useEffect, createRef } from 'react';
-import { CircularProgress, Grid, Typography, InputLabel, MenuItem, FormControl, Select } from '@material-ui/core';
+import { CircularProgress, Grid, Typography, InputLabel, MenuItem, FormControl, FormControlLabel, Checkbox, Select } from '@material-ui/core';
 
 import PlaceDetails from '../PlaceDetails/PlaceDetails';
 import useStyles from './styles.js';
 
-const List = ({ places, type, setType, rating, setRating, disability, setDisability, childClicked, isLoading }) => {
+const List = ({ places, type, setType, rating, setAssistant, setRating, disability, setDisability, childClicked, isLoading }) => {
   const [elRefs, setElRefs] = useState([]);
+
   const classes = useStyles();
 
   useEffect(() => {
@@ -16,18 +17,18 @@ const List = ({ places, type, setType, rating, setRating, disability, setDisabil
     switch (disability) {
       case '1':
       case '4':
-        setRating('2');  
+        setRating(Number(2));  
         break;
       case '2':
       case '5':
-        setRating('3');  
+        setRating(Number(3));  
         break;
       case '3':
       case '6':
-        setRating('4.5');  
+        setRating(Number(4.5));  
         break;
       default:
-        setRating('4');
+        setRating(Number(4));
         break;
     }
   }, [disability]);
@@ -56,20 +57,24 @@ const List = ({ places, type, setType, rating, setRating, disability, setDisabil
           <FormControl className={classes.formControl}>
             <InputLabel id="type">Tipo</InputLabel>
             <Select id="type" value={type} onChange={(e) => setType(e.target.value)}>
+              <MenuItem value="">Todos</MenuItem>
               <MenuItem value="restaurant">Restaurantes</MenuItem>
               <MenuItem value="hotel">Hotéis</MenuItem>
             </Select>
           </FormControl>
           <FormControl className={classes.formControl}>
             <InputLabel id="rating">Acessibilidade</InputLabel>
-            <Select id="rating" value={rating} onChange={(e) => setRating(e.target.value)}>
-              <MenuItem value="">Todas</MenuItem>
+            <Select id="rating" value={rating} onChange={(e) => setRating(Number(e.target.value))}>
+              <MenuItem value="0">Todas</MenuItem>
               <MenuItem value="1">Acima de 1.0</MenuItem>
               <MenuItem value="2">Acima de 2.0</MenuItem>
               <MenuItem value="3">Acima de 3.0</MenuItem>
               <MenuItem value="4">Acima de 4.0</MenuItem>
               <MenuItem value="4.5">Acima de 4.5</MenuItem>
             </Select>
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <FormControlLabel control={<Checkbox onChange={(e) => setAssistant(e.target.checked)} />} label="Assistênte de Acessibilidade" />
           </FormControl>
           <Grid container spacing={3} className={classes.list}>
             {places?.map((place, i) => (

@@ -29,8 +29,8 @@ const Map = ({ coords, places, setCoords, setBounds, setChildClicked }) => {
         {places.length && places.map((place, i) => (
           <div
             className={classes.markerContainer}
-            lat={Number(place.latitude)}
-            lng={Number(place.longitude)}
+            lat={place.latitude}
+            lng={place.longitude}
             key={i}
           >
             {!matches
@@ -43,7 +43,11 @@ const Map = ({ coords, places, setCoords, setBounds, setChildClicked }) => {
                     alt="place"
                     src={place.photo ? place.photo.images.large.url : 'https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg'}
                   />
-                  <Rating name="read-only" size="small" value={Number(place.rating)} readOnly />
+                  <Typography className={classes.typography} variant="caption" gutterBottom>Acessível a cadeira de rodas?</Typography>
+                  <Typography gutterBottom variant="body1">
+                    {place.accessibility?.accessibleWith?.wheelchair ? "Sim" : "Não"}
+                  </Typography>
+                  <Rating name="read-only" size="small" value={place.rating} readOnly />
                 </Paper>
               )}
           </div>
